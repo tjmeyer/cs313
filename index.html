@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<title>Meyer's Awesome Page</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <!-- Main CSS Style sheet for general styling -->
+   <link rel="stylesheet" href="./css/main.css">
+   
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
@@ -14,28 +18,62 @@
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+   <!-- Navigation Menu -->
+   <nav class="navbar navbar-default">
+      <div class="container-fluid">
+         <div class="navbar-header">
+            <a class="navbar-brand" href="#">Trevor Meyer</a>
+         </div>
+         <div>
+            <ul class="nav navbar-nav">
+               <li class="active"><a href="#">About Me</a></li>
+               <li><a href="./assignments.html">Assignments</a></li>
+               <li><a href="./contact.html">Contact</a></li>
+               <li><a href="./fun.html">For Fun</a></li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+   <!-- End Navigation Menu -->
+   
 	<div class="container">
 		<div class="jumbotron">
 			<h1>Trevor Meyer</h1>
-			<p>Strength does not come from winning. 
+			<blockquote>Strength does not come from winning. 
 			Your struggles develop your strengths. 
 			When you go through hardships and decide not to surrender, that is strength.
-			</p>
+			</blockquote>
 		</div>
-      <div class="row">
-         <div class="col-xs-3">
-            <a href="./index" class="btn btn-default btn-block">About Me</a>
-         </div>
-         <div class="col-xs-3">
-            <a href="./assignments" class="btn btn-default btn-block">CS 313 Assignments</a>
-         </div>
-         <div class="col-xs-3">
-            <a class="btn btn-default btn-block">Contact</a>  
-         </div>
-         <div class="col-xs-3">
-            <a href="./fun" class="btn btn-default btn-block">Just for fun</a>
+      
+      <!-- Start page content -->
+      <div class="body">
+         <div class="row">
+            <div class="col-sm-4">
+               <img src="./images/aboutMe.jpg" alt="Trevor and Stephanie" class="img-rounded img-responsive">
+               <br/>
+               <pre>
+Major: Software Engineering
+Graduation: December, 2015
+Birthday: October 28, 1989
+Mission: Kobe, Japan
+Language: English, Japanese
+               </pre>
+            </div>
+            <div class="col-sm-8">
+               <h3>Currently I'm... </h3>
+               <p>I've been interested in computers for as long as I can remember. My wife and I own a <a href="http://www.ignispc.com/" target="_blank">small
+               business</a> in town that helps people with their computers and I love every minute of it!</p>
+               <h3>I plan to...</h3>
+               <p>I am studying both Computer Science and Medicine currently. Eventually I plan to use my knowledge
+               to continue helping people by working as law enforcement. It's really the perfect mix of all of my passions: computers,
+               health/fitness, guns, and fast cars!
+               </p>
+               <h3>I'm Married...</h3>
+               <p>My wife, Stephanie, yes, Stephanie Meyer, is the love my life. She is currently attending University of Cincinnati 
+               to become a DNP (Doctor Nurse Practitioner) of Midwifery.</p>
+            </div>
          </div>
       </div>
-      
+      <!-- End page content -->
 	</div>
 </html>
