@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Meyer's Awesome Page</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <!-- Main CSS Style sheet for general styling -->
+   <link rel="stylesheet" href="./css/main.css">
+   
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+   
+   <script src="./js/main.js"></script>
+   
+</head>
+<body>
+   <!-- Navigation Menu -->
+   <nav class="navbar navbar-default">
+      <div class="container-fluid">
+         <div class="navbar-header">
+            <a class="navbar-brand" href="#">Trevor Meyer</a>
+         </div>
+         <div>
+            <ul class="nav navbar-nav">
+               <li class="active"><a href="#">About Me</a></li>
+               <li><a href="./assignments.html">Assignments</a></li>
+               <li><a href="./contact.html">Contact</a></li>
+               <li><a href="./fun.html">For Fun</a></li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+   <!-- End Navigation Menu -->
+   
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Trevor Meyer</h1>
+			<blockquote>Strength does not come from winning. 
+			Your struggles develop your strengths. 
+			When you go through hardships and decide not to surrender, that is strength.
+			</blockquote>
+		</div>
+      
+      <!-- Start page content -->
+      <div class="content-container">
+         <div class="row">
+            <div class="col-sm-4">
+               <img id="profileImg" src="./images/aboutMe.jpg" alt="Trevor and Stephanie" class="img-rounded img-responsive">
+               <br/>
+               <p style="text-align:center;">
+                  Major: Software Engineering<br/>
+                  Graduation: December, 2015<br/>
+                  Birthday: October 28, 1989<br/>
+                  Mission: Kobe, Japan<br/>
+                  Language: English, Japanese<br/>
+               </p>
+            </div>
+            <div class="col-sm-8">
+               <h3>Currently, I'm...
+               <a onclick="changeImg('profileImg', 'images/current.jpg')"><span class="glyphicon glyphicon-camera"></span></a>
+               </h3>
+               <p>
+                  I've been interested in computers for as long as I can remember. 
+                  My wife and I own a <a href="http://www.ignispc.com/" target="_blank">small
+                  business</a> in town that helps people with their computers and I love every 
+                  minute of it!
+               </p>
+               <p>
+                  I have a lot of interests, but suffice it to say that I love the outdoors,
+                  all forms of science, helping people, and catching bad-guys!
+               </p>
+               <h3>I plan to...
+               <a onclick="changeImg('profileImg', './images/plan.jpg')"><span class="glyphicon glyphicon-camera"></span></a></h3>
+               <p>
+                  I am studying both Computer Science and Medicine currently. Eventually I plan
+                  to use my knowledge to continue helping people by working in some form of law 
+                  enforcement. It's really the perfect mix of all of my passions: computers,
+                  health/fitness, guns, and fast cars!
+               </p>
+               <h3>I'm Married...
+               <a onclick="changeImg('profileImg', './images/married.jpg')"><span class="glyphicon glyphicon-camera"></span></a></h3>
+               <p>
+                  My wife, Stephanie, yes, Stephanie Meyer, is the love my life. She is currently 
+                  attending University of Cincinnati to become a DNP (Doctor Nurse Practitioner) 
+                  of Midwifery. She is currently working as a Labor and Delivery Nurse at Madison 
+                  Memorial Hospital. If you've recently had a baby, then I'm sure you've met her.
+               </p>
+            </div>
+         </div>
+      </div>
+      <!-- End page content -->
+	</div>
+</html>
