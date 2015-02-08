@@ -58,56 +58,82 @@
                   </div>";
          }
       ?>
-      <?php 
-         foreach ($db->query("SELECT username, account_id FROM user") as $row)
+      <div class="col-sm-12 content-container">
+         <div class="col-sm-8">
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+            <h2>Username: (try "show all")</h2><p><input type="text" class="form-control" name="username" placeholder="Username"></p>
+         </div>
+         <div class="col-sm-3">
+            <br/>
+            <br/>
+            <input type="submit" class="btn btn-default btn-lg" value="Query!"><br/>
+            </form>
+         </div>
+      </div>
+      
+      <?php
+         if($_SERVER["REQUEST_METHOD"] == "POST")
          {
-            echo "<div class='row'>";
-            echo "<div class='col-sm-3 content-container'>";
-            echo "<h2>Username: ".$row['username']."</h2>";
-            echo "<h3>Account:  ".$row['account_id']."</h2>";
-            echo "</div>"; #end the user column
-            
-            echo "<div class='col-sm-8 content-container'>";
-            echo "<h3>List of available Phones on Account</h3>";
-            echo "<table>\n";
-            echo "<tr>\n";
-            echo "<th>Phone ID</th>";
-            echo "<th>Phone Name</th>";
-            echo "<th>Phone I/O</th>";
-            echo "</tr>\n";
-            foreach($db->query("SELECT p.id, p.name, p.connection FROM user u JOIN phone p ON p.account_id = u.account_id WHERE u.username = \"".$row['username']."\"") as $phone)
+            $queryUserName = $_POST["username"];
+            if ($_POST["username"] == "show all")
             {
-               echo "<tr>\n";
-               echo "<td>".$phone['id']."</td>\n";
-               echo "<td>";
-           
-               $phoneLocQ = $db->query("SELECT l.latitude, l.longitude FROM phone p JOIN locationhistory l ON p.id = l.phone_id WHERE p.id=".$phone['id']);
-               $location = $phoneLocQ->fetch(PDO::FETCH_ASSOC);
-               if($location)
-               {
-                  createModal($location['latitude'],$location['longitude'],$phone['id']);
-                  echo "<a href='#myModal".$phone['id']."' data-toggle='modal'>".$phone['name']."</a>";
-               }
-               else
-               {
-                  echo $phone['name'];
-               }
-               echo "</td>\n";
-               echo "<td>";
-               if ($phone['connection'] == 1)
-               {
-                  echo "<span class='glyphicon glyphicon-ok' style='color:green'/>";
-               }
-               else
-               {
-                  echo "<span class='glyphicon glyphicon-remove' style='color:red'/>";
-               }
-               echo "</tr>\n";
+               $queryStatement = $db->query("SELECT username, account_id FROM user");
             }
-            echo "</table>\n";
-            echo "</div></div><hr/>"; #second </div> to close row.
-            
+            else
+            {
+               $queryStatement = $db->query("SELECT username, account_id FROM user WHERE username = \"".$_POST["username"]."\"");
+            }
+            while ($row = $queryStatement->fetch(PDO::FETCH_ASSOC))
+            {
+               echo "<div class='row'>";
+               echo "<div class='col-sm-3 content-container'>";
+               echo "<h2>Username: ".$row['username']."</h2>";
+               echo "<h3>Account:  ".$row['account_id']."</h2>";
+               echo "</div>"; #end the user column
+               
+               echo "<div class='col-sm-8 content-container'>";
+               echo "<h3>List of available Phones on Account</h3>";
+               echo "<table>\n";
+               echo "<tr>\n";
+               echo "<th>Phone ID</th>";
+               echo "<th>Phone Name</th>";
+               echo "<th>Phone I/O</th>";
+               echo "</tr>\n";
+               foreach($db->query("SELECT p.id, p.name, p.connection FROM user u JOIN phone p ON p.account_id = u.account_id WHERE u.username = \"".$row['username']."\"") as $phone)
+               {
+                  echo "<tr>\n";
+                  echo "<td>".$phone['id']."</td>\n";
+                  echo "<td>";
+              
+                  $phoneLocQ = $db->query("SELECT l.latitude, l.longitude FROM phone p JOIN locationhistory l ON p.id = l.phone_id WHERE p.id=".$phone['id']);
+                  $location = $phoneLocQ->fetch(PDO::FETCH_ASSOC);
+                  if($location)
+                  {
+                     createModal($location['latitude'],$location['longitude'],$phone['id']);
+                     echo "<a href='#myModal".$phone['id']."' data-toggle='modal'>".$phone['name']."</a>";
+                  }
+                  else
+                  {
+                     echo $phone['name'];
+                  }
+                  echo "</td>\n";
+                  echo "<td>";
+                  if ($phone['connection'] == 1)
+                  {
+                     echo "<span class='glyphicon glyphicon-ok' style='color:green'/>";
+                  }
+                  else
+                  {
+                     echo "<span class='glyphicon glyphicon-remove' style='color:red'/>";
+                  }
+                  echo "</tr>\n";
+               }
+               echo "</table>\n";
+               echo "</div></div><hr/>"; #second </div> to close row.
+               
+            }
          }
       ?>
+      
 	</div>
 </html>
