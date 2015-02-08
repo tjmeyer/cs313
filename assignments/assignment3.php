@@ -1,16 +1,14 @@
 <?php 
+   require("dbConnector.php");
    try
    {
-      $user = "php";
-      $password = "php-pass";
-      $db = new PDO("mysql:host=127.0.0.1;dbname=phonedb", $user, $password);
+      $db = loadDatabase();
    }
    catch (PDOException $e)
    {
-      echo "ERROR: " . $e->getMessage();
+      echo "ERROR: ".$e->getMessage();
       die();
    }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
