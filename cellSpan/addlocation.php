@@ -172,7 +172,7 @@ if($id != null && $_SERVER["REQUEST_METHOD"] == "POST")
    {
       //perform sql here
       $time = date('Y-m-d G:i:s');
-      $query = "INSERT INTO locationhistory(latitude, longitude, altitude, time_of_history, phone_id) VALUES(:lat, :lon, :alt, :time, :phone_id)";
+      $query = "INSERT INTO locationhistory(latitude, longitude, altitude, time_created, phone_id) VALUES(:lat, :lon, :alt, :time, :phone_id)";
       $statement = $db->prepare($query);
       $statement->bindParam(':lat', $lat);
       $statement->bindParam(':lon', $lon);
@@ -181,10 +181,10 @@ if($id != null && $_SERVER["REQUEST_METHOD"] == "POST")
       $statement->bindParam(':phone_id', $id);
       $statement->execute();
       
-      // if (isset($_COOKIE['phone_id']))
-      // {
-         // unset($_COOKIE['phone_id']);
-      // }
+      if (isset($_COOKIE['phone_id']))
+      {
+         unset($_COOKIE['phone_id']);
+      }
       header("Location: ./accountsummary.php");
       die();
    }

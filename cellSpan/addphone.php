@@ -84,9 +84,9 @@
             $query = "INSERT INTO phone(name, dateCreated, connection, account_id) VALUES(:name, :date, :connection, :account_id)";
             $statement = $db->prepare($query);
             $connection = 1;
-            $timestamp = date('Y-m-d H:i:s','1299762201428');
+            $time = date('Y-m-d G:i:s');
             $statement->bindParam(':name', $phone_name);
-            $statement->bindParam(':date', $timestamp);
+            $statement->bindParam(':date', $time);
             $statement->bindParam(':connection', $connection);
             $statement->bindParam(':account_id', $account);
             $statement->execute();
