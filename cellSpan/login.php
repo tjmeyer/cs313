@@ -29,6 +29,10 @@
                $message = "<h2 style='color:red;text-align:center;'>Incorrect Login</h2>";
             }
          }
+         else
+         {
+            $message = "<h2 style='color:red;text-align:center;'>Incorrect Login</h2>";
+         }
       }
    }
    catch (PDOException $e)
