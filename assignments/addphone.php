@@ -51,7 +51,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>CellSpan - Create Account</title>
+	<title>CellSpan - Add Phone</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    
@@ -91,17 +91,15 @@
       {
          echo "<div class='row'>";
          echo "<div class='col-sm-3 content-container'>\n";
-         echo "<h2>".$phone['name']." <br/><a href='#'><span title='Phone Settings' class='glyphicon glyphicon-cog'></span></a> ";
+         echo "<h2>".$phone['name']." <a href='#'><span title='Phone Settings' class='glyphicon glyphicon-cog'></span></a> ";
          if ($phone['connection'] == 1)
          {
             echo "<span title='Phone is Connected' class='glyphicon glyphicon-ok' style='color:green'/>";
          }
          else
          {
-            echo "<span title='Phone is disconnected' class='glyphicon glyphicon-remove' style='color:red'/> ";
+            echo "<span title='Phone is disconnected' class='glyphicon glyphicon-remove' style='color:red'/>";
          }
-         echo " <a href='./addlocation.php?id=".$phone['id']."'><span title='Add Location' class='glyphicon glyphicon-plus-sign' style='color:green'/></a>";
-         echo " <a href='./deletephone.php?id=".$phone['id']."'><span title='Delete this phone' class='glyphicon glyphicon-ban-circle' style='color:red'/></a>";
          echo "</h2>";
          $phoneLocQ = $db->query("SELECT l.latitude, l.longitude, l.altitude FROM phone p JOIN locationhistory l ON p.id = l.phone_id WHERE p.id=".$phone['id']);
          $location = $phoneLocQ->fetch(PDO::FETCH_ASSOC);
@@ -126,7 +124,7 @@
       }
    ?>
    <div style="text-align:center;">
-      <a href="./addphone.php" class="btn btn-primary btn-lg">Add Phone <span class="glyphicon glyphicon-phone"></span></a>
+      <a href="./addPhone.php" class="btn btn-primary btn-lg">Add Phone <span class="glyphicon glyphicon-phone"></span></a>
    </div>
 </div>
 </body>
