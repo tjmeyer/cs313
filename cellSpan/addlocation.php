@@ -62,7 +62,7 @@ else
    }
 }
 
-$valid = false;
+$valid = FALSE;
 foreach($db->query("SELECT p.id FROM user u JOIN phone p ON u.account_id = p.account_id WHERE username = '".$username."'") as $row)
 {
    if ($row['id'] === $id)
@@ -174,15 +174,16 @@ if($id != null && $_SERVER["REQUEST_METHOD"] == "POST")
          $altErr == $goodEntry &&
          $lonErr == $goodEntry)
    {
-      $date = date('Y-m-d H:i:s','1299762201428');
       //perform sql here
+      $time = date('Y-m-d G:i:s');
       $query = "INSERT INTO locationhistory(latitude, longitude, altitude, time_of_history, phone_id) VALUES(:lat, :lon, :alt, :time, :phone_id)";
       $statement = $db->prepare($query);
       $statement->bindParam(':lat', $lat);
       $statement->bindParam(':lon', $lon);
-      $statement->bindParam(':time', $date);
       $statement->bindParam(':alt', $alt);
+      $statement->bindParam(':time', $time);
       $statement->bindParam(':phone_id', $id);
+      
       $statement->execute();
       
       if (isset($_COOKIE['phone_id']))
@@ -195,11 +196,6 @@ if($id != null && $_SERVER["REQUEST_METHOD"] == "POST")
 
 }
 
-// else
-// {
-   // header("Location: ./accountsummary.php");
-   // die();
-// }
 ?>
 <div class="container">
    <div class="row content-container">
