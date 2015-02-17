@@ -1,55 +1,54 @@
 <?php 
+function kill()
+{
+  header("Location: ./login.php");
+  die();
+}
 
-   function kill()
-   {
-      header("Location: ./login.php");
-      die();
-   }
-   
-   require("dbConnector.php");
-   try
-   {
-      $db = loadDatabase();
-      $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-      session_start();
-      
-      // Check for valid user
-     
-      if (isset($_COOKIE['user']))
-      {
-         $username = $_COOKIE['user'];
-      }
-      else
-      {
-         kill();
-      }
-      $password = $_SESSION['pass'];
-      
-      $statement = $db->query("SELECT username, password FROM user WHERE username = '".$username."'");
-      
-      if ($row = $statement->fetch(PDO::FETCH_ASSOC))
-      {
-         if ($row['password'] !== $password)
-         {
-            kill();
-         }
-      }
-      else
-      {
-         kill();
-      }
-      
-      // Fetch Information
-      $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
-      $user = $statement->fetch(PDO::FETCH_ASSOC);
-   }
-   catch (PDOException $e)
-   {
-      echo "DATABASE ERROR: ".$e->getMessage();
-      die();
-   }
-   
-   if ($_SERVER["REQUEST_METHOD"] == "GET")
+require("dbConnector.php");
+try
+{
+  $db = loadDatabase();
+  $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+  session_start();
+  
+  // Check for valid user
+ 
+  if (isset($_COOKIE['user']))
+  {
+	 $username = $_COOKIE['user'];
+  }
+  else
+  {
+	 kill();
+  }
+  $password = $_SESSION['pass'];
+  
+  $statement = $db->query("SELECT username, password FROM user WHERE username = '".$username."'");
+  
+  if ($row = $statement->fetch(PDO::FETCH_ASSOC))
+  {
+	 if ($row['password'] !== $password)
+	 {
+		kill();
+	 }
+  }
+  else
+  {
+	 kill();
+  }
+  
+  // Fetch Information
+  $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
+  $user = $statement->fetch(PDO::FETCH_ASSOC);
+}
+catch (PDOException $e)
+{
+  echo "DATABASE ERROR: ".$e->getMessage();
+  die();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "GET")
 {
    $id = $_GET['id'];
    setcookie('phone_id', $id);
@@ -114,9 +113,6 @@ else
 <body>
 
 <?php
-
-
-   
 if($id != null && $_SERVER["REQUEST_METHOD"] == "POST")
 {
    if (empty($_POST['lat']))
@@ -183,13 +179,12 @@ if($id != null && $_SERVER["REQUEST_METHOD"] == "POST")
       $statement->bindParam(':alt', $alt);
       $statement->bindParam(':time', $time);
       $statement->bindParam(':phone_id', $id);
-      
       $statement->execute();
       
-      if (isset($_COOKIE['phone_id']))
-      {
-         unset($_COOKIE['phone_id']);
-      }
+      // if (isset($_COOKIE['phone_id']))
+      // {
+         // unset($_COOKIE['phone_id']);
+      // }
       header("Location: ./accountsummary.php");
       die();
    }
