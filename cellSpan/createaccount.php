@@ -3,6 +3,7 @@
    try
    {
       $db = loadDatabase();
+      session_start();
    }
    catch (PDOException $e)
    {
@@ -42,12 +43,12 @@
    $password_error = "";
    $password_confirm_error = "";
 
-   $email = "asdf@asdf.com";
-   $first_name = "asdf";
-   $last_name = "asdf";
-   $username = "asdf";
-   $password = "asdfasdf";
-   $password_confirm = "asdfasdf";
+   $email = "";
+   $first_name = "";
+   $last_name = "";
+   $username = "";
+   $password = "";
+   $password_confirm = "";
    
    $goodEntry = "<span style='color:green;' class='glyphicon glyphicon-ok'></span>";
       
@@ -176,8 +177,11 @@
             $password_confirm_error == $goodEntry)
             {
                try{
-                  $query = "INSERT INTO account (null,'a')";
+                  $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+                  $query = "INSERT INTO account(status) VALUES(:status)";
                   $statement = $db->prepare($query);
+                  $status = 'a';
+                  $statement->bindParam(':status', $status);
                   $statement->execute();
                   
                   $last_id = $db->lastInsertId();
@@ -193,6 +197,10 @@
                   $statement->bindParam(':account_id', $last_id);
                
                   $statement->execute();
+                  $_SESSION['pass'] = $password;
+                  setcookie('user', $username, time() + (86400*30));
+                  header("Location: ./accountsummary.php");
+                  die();
                }
                catch(Exception $e)
                {
