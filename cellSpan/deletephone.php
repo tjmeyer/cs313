@@ -10,6 +10,7 @@
    try
    {
       $db = loadDatabase();
+      $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
       session_start();
       
       // Check for valid user
@@ -50,7 +51,32 @@
    
    if ($_SERVER["REQUEST_METHOD"] == "GET")
    {
-      $query = "SELECT p.id FROM user u JOIN phone p ON u.account_id = p.account_id WHERE username = '".$username."'";
+      $valid = false;
+      foreach($db->query("SELECT p.id FROM user u JOIN phone p ON u.account_id = p.account_id WHERE username = '".$username."'") as $row)
+      {
+         if ($row['id'] === $_GET['id'])
+         {
+            $valid = true;
+         }
+      }
+      if($valid)
+      {
+         $query = "DELETE FROM locationhistory WHERE phone_id = :id";
+         $statement = $db->prepare($query);
+         $statement->bindParam(':id', $_GET['id']);
+         $statement->execute();
+         $query = "DELETE FROM phone WHERE id = :id";
+         $statement = $db->prepare($query);
+         $statement->bindParam(':id', $_GET['id']);
+         $statement->execute();
+         header("Location: ./accountsummary.php");
+         die();
+      }
+      else
+      {
+         echo "<h1 class='content-container'>You are not authorized to edit this entry</h1>";
+         die();
+      }
    }
    else
    {
