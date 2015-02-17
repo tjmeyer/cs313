@@ -186,6 +186,9 @@
                   
                   $last_id = $db->lastInsertId();
                   
+				  require 'password.php';
+				  $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+				  
                   $query = 'INSERT INTO user(first_name, last_name, username, email, password, account_id) VALUES(:first_name, :last_name, :username, :email, :password, :account_id)';
                   $statement = $db->prepare($query);
                   
@@ -193,11 +196,11 @@
                   $statement->bindParam(':last_name', $last_name);
                   $statement->bindParam(':username', $username);
                   $statement->bindParam(':email', $email);
-                  $statement->bindParam(':password', $password);
+                  $statement->bindParam(':password', $passwordHash);
                   $statement->bindParam(':account_id', $last_id);
                
                   $statement->execute();
-                  $_SESSION['pass'] = $password;
+                  $_SESSION['pass'] = $passwordHash;
                   setcookie('user', $username, time() + (86400*30));
                   header("Location: ./accountsummary.php");
                   die();

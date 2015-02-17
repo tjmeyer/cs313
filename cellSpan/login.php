@@ -16,10 +16,11 @@
          
          if ($row = $statement->fetch(PDO::FETCH_ASSOC))
          {
-            if ($row['password'] === $password)
-            {
+            // if ($row['password'] === $password)
+            if (password_verify($password, $row['password']))
+			{
                session_start();
-               $_SESSION['pass'] = $password;
+               $_SESSION['pass'] = $row['password'];
                setcookie('user', $username, time() + (86400*30));
                header("Location: ./accountsummary.php");
                die();
