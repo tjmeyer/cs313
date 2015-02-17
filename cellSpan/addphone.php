@@ -1,105 +1,105 @@
 <?php 
 
-   function kill()
-   {
-      header("Location: ./login.php");
-      die();
-   }
-   
-   require("dbConnector.php");
-   try
-   {
-      $db = loadDatabase();
-      session_start();
-      
-      // Check for valid user
-     
-      if (isset($_COOKIE['user']))
-      {
-         $username = $_COOKIE['user'];
-      }
-      else
-      {
-         kill();
-      }
-      $password = $_SESSION['pass'];
-      
-      $statement = $db->query("SELECT username, password FROM user WHERE username = '".$username."'");
-      
-      if ($row = $statement->fetch(PDO::FETCH_ASSOC))
-      {
-         if ($row['password'] !== $password)
-         {
-            kill();
-         }
-      }
-      else
-      {
-         kill();
-      }
-      
-      // Fetch Information
-      $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
-      $user = $statement->fetch(PDO::FETCH_ASSOC);
-   }
-   catch (PDOException $e)
-   {
-      echo "DATABASE ERROR: ".$e->getMessage();
-      die();
-   }
-   
-   $phone_name = "";
-   $phone_name_error = "";
-   $goodEntry = "<span style='color:green;' class='glyphicon glyphicon-ok'></span>";
+function kill()
+{
+  header("Location: ./login.php");
+  die();
+}
 
-   if ($_SERVER["REQUEST_METHOD"] == "POST")
-   {
-      if (empty($_POST['phone_name']))
-      {
-         $phone_name_error = "Phone name is required";
-      }
-      else
-      {
-         $phone_name = $_POST['phone_name'];
-         if (!preg_match("/^[a-zA-Z0-9 ]*$/", $phone_name))
-         {
-            $phone_name_error = "Can only contain letters and numbers.";
-         }
-         else
-         {
-            $phone_name_error = $goodEntry ;
-         }
-      }
-      if ($phone_name_error === $goodEntry)
-      {
-         try
-         {
-            $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-            // get account_id
-            foreach($db->query("SELECT account_id FROM user WHERE username = '".$username."'") as $row)
-            {
-               $account = $row[0];
-            }
-            
-            $query = "INSERT INTO phone(name, dateCreated, connection, account_id) VALUES(:name, :date, :connection, :account_id)";
-            $statement = $db->prepare($query);
-            $connection = 1;
-            $time = date('Y-m-d G:i:s');
-            $statement->bindParam(':name', $phone_name);
-            $statement->bindParam(':date', $time);
-            $statement->bindParam(':connection', $connection);
-            $statement->bindParam(':account_id', $account);
-            $statement->execute();
-            
-            header("Location: ./accountsummary.php");
-            die();
-         }
-         catch(Exception $e)
-         {
-            die("DATABASE ERROR: ".$e);
-         }
-      }
-   }
+require("dbConnector.php");
+try
+{
+  $db = loadDatabase();
+  session_start();
+  
+  // Check for valid user
+ 
+  if (isset($_COOKIE['user']))
+  {
+	 $username = $_COOKIE['user'];
+  }
+  else
+  {
+	 kill();
+  }
+  $password = $_SESSION['pass'];
+  
+  $statement = $db->query("SELECT username, password FROM user WHERE username = '".$username."'");
+  
+  if ($row = $statement->fetch(PDO::FETCH_ASSOC))
+  {
+	 if ($row['password'] !== $password)
+	 {
+		kill();
+	 }
+  }
+  else
+  {
+	 kill();
+  }
+  
+  // Fetch Information
+  $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
+  $user = $statement->fetch(PDO::FETCH_ASSOC);
+}
+catch (PDOException $e)
+{
+  echo "DATABASE ERROR: ".$e->getMessage();
+  die();
+}
+
+$phone_name = "";
+$phone_name_error = "";
+$goodEntry = "<span style='color:green;' class='glyphicon glyphicon-ok'></span>";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+  if (empty($_POST['phone_name']))
+  {
+	 $phone_name_error = "Phone name is required";
+  }
+  else
+  {
+	 $phone_name = $_POST['phone_name'];
+	 if (!preg_match("/^[a-zA-Z0-9 ]*$/", $phone_name))
+	 {
+		$phone_name_error = "Can only contain letters and numbers.";
+	 }
+	 else
+	 {
+		$phone_name_error = $goodEntry ;
+	 }
+  }
+  if ($phone_name_error === $goodEntry)
+  {
+	 try
+	 {
+		$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+		// get account_id
+		foreach($db->query("SELECT account_id FROM user WHERE username = '".$username."'") as $row)
+		{
+		   $account = $row[0];
+		}
+		
+		$query = "INSERT INTO phone(name, dateCreated, connection, account_id) VALUES(:name, :date, :connection, :account_id)";
+		$statement = $db->prepare($query);
+		$connection = 1;
+		$time = date('Y-m-d G:i:s');
+		$statement->bindParam(':name', $phone_name);
+		$statement->bindParam(':date', $time);
+		$statement->bindParam(':connection', $connection);
+		$statement->bindParam(':account_id', $account);
+		$statement->execute();
+		
+		header("Location: ./accountsummary.php");
+		die();
+	 }
+	 catch(Exception $e)
+	 {
+		die("DATABASE ERROR: ".$e);
+	 }
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
