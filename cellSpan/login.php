@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
       // Create user session
       session_start();
       $_SESSION['user'] = $_POST['username'];
-      header('Location: ./accountSummary.php');
+      header('Location: ./accountsummary.php');
    }
    else
    {
