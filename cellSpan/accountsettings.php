@@ -1,11 +1,5 @@
-<?php 
-
-   function kill()
-   {
-      header("Location: ./login.php");
-      die();
-   }
-   
+<?php
+   require("authenticate.php");
    require("dbConnector.php");
    try
    {
@@ -13,35 +7,17 @@
       session_start();
       
       // Check for valid user
-     
-      if (isset($_COOKIE['user']))
+      if (verify($_SESSION, 'user', $db))
       {
-         $username = $_COOKIE['user'];
+         // Fetch Information
+         $username = $_SESSION['user'];
+         $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
+         $user = $statement->fetch(PDO::FETCH_ASSOC);
       }
       else
       {
-         kill();
+         logout();
       }
-      $password = $_SESSION['pass'];
-      
-      $statement = $db->query("SELECT username, password FROM user WHERE username = '".$username."'");
-      
-      if ($row = $statement->fetch(PDO::FETCH_ASSOC))
-      {
-         if ($row['password'] !== $password)
-         {
-            kill();
-         }
-      }
-      else
-      {
-         kill();
-      }
-      
-      // Fetch Information
-      $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
-      $user = $statement->fetch(PDO::FETCH_ASSOC);
-      $account_id = $user['account_id'];
    }
    catch (PDOException $e)
    {
@@ -90,7 +66,7 @@
          <h1>Users on Account</h1>
          <hr/>
          <?php
-         foreach($db->query("SELECT * FROM user WHERE account_id = ".$account_id) as $row)
+         foreach($db->query("SELECT * FROM user WHERE account_id = ".$user['account_id']) as $row)
          {
             echo "<h3>".$row['first_name']." ".$row['last_name'].": ".$row['username']."</h3>";
             echo "<br/>";

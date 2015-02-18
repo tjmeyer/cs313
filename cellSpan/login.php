@@ -1,47 +1,26 @@
 <?php 
-   require("dbConnector.php");
-   try
-   {
-      $db = loadDatabase();
-      
-      $message = "<h2 style='text-align:center;'>Welcome Back!</h2>";
-      $username = "";
-      $password = "";
-      if ($_SERVER["REQUEST_METHOD"] == "POST")
-      {
-         $username = $_POST['username'];
-         $password = $_POST['password'];
-         
-         $statement = $db->query("SELECT username, password FROM user WHERE username = '".$username."'");
-         
-         if ($row = $statement->fetch(PDO::FETCH_ASSOC))
-         {
-            if ($row['password'] === $password)
-            {
-               session_start();
-               $_SESSION['pass'] = $password;
-               setcookie('user', $username, time() + (86400*30));
-               header("Location: ./accountsummary.php");
-               die();
-            }
-            else
-            {
-               $message = "<h2 style='color:red;text-align:center;'>Incorrect Login</h2>";
-            }
-         }
-         else
-         {
-            $message = "<h2 style='color:red;text-align:center;'>Incorrect Login</h2>";
-         }
-      }
-   }
-   catch (PDOException $e)
-   {
-      echo "ERROR: ".$e->getMessage();
-      die();
-   }
+require("dbConnector.php");
+require("authenticate.php"); // <- includes dbconnector that way ALL pages must verify if they access the DB.
 
-   ?>
+$forwardTo = "accountSummary.php";
+$message = "<h1 style='text-align:center;'>Welcome Back!</h1>";
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+   $db = loadDatabase();
+   if (authenticate($_POST['username'], $_POST['password'], $db))
+   {
+      // Create user session
+      session_start();
+      $_SESSION['user'] = $_POST['username'];
+      header('Location: ./accountSummary.php');
+   }
+   else
+   {
+      $message = "<h1 style='text-align:center; color:red;'>Invalid Login</h1>";
+   }
+}
+   
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,9 +56,9 @@
          <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="loginForm">
             <p><input type="text" class="form-control input-lg" name="username" placeholder="username"/></p>
             <p><input type="password" class="form-control input-lg" name="password" placeholder="password"/></p>
-            <p><div style="text-align:center;"><input type="submit" value="login" class="btn btn-primary btn-lg"/>
+            <p><div style="text-align:center;"><input type="submit" value="Login" class="btn btn-primary btn-lg"/> 
             <a href="./createaccount.php" class="btn btn-default btn-lg">New Account <span class="glyphicon glyphicon-plus"></span></a></div></p>
-         </form>
+         </form><br/>
       </div>
       <div class="col-sm-4"></div>
    </div>   

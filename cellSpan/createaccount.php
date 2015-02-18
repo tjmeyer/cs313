@@ -1,5 +1,6 @@
 <?php 
    require("dbConnector.php");
+   require("password.php");
    try
    {
       $db = loadDatabase();
@@ -177,6 +178,7 @@
             $password_confirm_error == $goodEntry)
             {
                try{
+                  // Create an account for the new user
                   $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
                   $query = "INSERT INTO account(status) VALUES(:status)";
                   $statement = $db->prepare($query);
@@ -189,16 +191,16 @@
                   $query = 'INSERT INTO user(first_name, last_name, username, email, password, account_id) VALUES(:first_name, :last_name, :username, :email, :password, :account_id)';
                   $statement = $db->prepare($query);
                   
+                  $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                   $statement->bindParam(':first_name', $first_name);
                   $statement->bindParam(':last_name', $last_name);
                   $statement->bindParam(':username', $username);
                   $statement->bindParam(':email', $email);
-                  $statement->bindParam(':password', $password);
+                  $statement->bindParam(':password', $passwordHash);
                   $statement->bindParam(':account_id', $last_id);
                
                   $statement->execute();
-                  $_SESSION['pass'] = $password;
-                  setcookie('user', $username, time() + (86400*30));
+                  $_SESSION['user'] = $username;
                   header("Location: ./accountsummary.php");
                   die();
                }
