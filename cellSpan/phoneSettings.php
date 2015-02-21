@@ -71,6 +71,8 @@
          $statement->bindParam(':name', $_POST['phone_name']);
          $statement->bindParam(':id', $_POST['user']);
          $statement->execute();
+         header('Location: ./accountSettings.php');
+         die('PHONE UPDATED SUCCESSFULLY');
       }
    }
 ?>
