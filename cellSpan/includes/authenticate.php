@@ -1,5 +1,4 @@
 <?php 
-require("logoutFunction.php");
 require("password.php");
 function authenticate($username, $password, $db)
 {

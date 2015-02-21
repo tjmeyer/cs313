@@ -1,6 +1,6 @@
 <?php 
-   require("authenticate.php");
-   require("dbConnector.php");
+   require("includes/authenticate.php");
+   require("includes/dbConnector.php");
    try
    {
       $db = loadDatabase();
@@ -27,7 +27,7 @@
       die();
    }
    
-   if ($_SERVER["REQUEST_METHOD"] == "GET")
+   if ($_SERVER["REQUEST_METHOD"] == "GET" && $user['master_user'] == 1)
    {
       $valid = false;
       foreach($db->query("SELECT p.id FROM user u JOIN phone p ON u.account_id = p.account_id WHERE username = '".$username."'") as $row)
@@ -39,7 +39,7 @@
       }
       if($valid)
       {
-         $query = "DELETE FROM locationhistory WHERE phone_id = :id";
+         $query = "DELETE FROM location WHERE phone_id = :id";
          $statement = $db->prepare($query);
          $statement->bindParam(':id', $_GET['id']);
          $statement->execute();
@@ -47,7 +47,7 @@
          $statement = $db->prepare($query);
          $statement->bindParam(':id', $_GET['id']);
          $statement->execute();
-         header("Location: ./accountsummary.php");
+         header("Location: ./accountSummary.php");
          die();
       }
       else
@@ -58,7 +58,7 @@
    }
    else
    {
-      header("Location: ./accountsummary.php");
+      header("Location: ./accountSummary.php");
       die();
    }
 ?>

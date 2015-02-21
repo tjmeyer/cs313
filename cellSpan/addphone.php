@@ -1,83 +1,48 @@
 <?php 
-
-require("dbConnector.php");
-require("authenticate.php");
-try
-{
-   $db = loadDatabase();
+   include("includes/authenticate.php");
+   include("includes/dbConnector.php");
+   include("includes/errorChecker.php");
+   include("includes/create.php");
    
-   // Check for valid user
+   // Verify user session 
+   $db = loadDatabase();
    session_start();
-   if(verify($_SESSION, 'user'))
+   if(!verify($_SESSION, 'user'))
    {
-      // Fetch Information
-      $username = $_SESSION['user'];
-      $statement = $db->query("SELECT * FROM user WHERE username = '".$username."'");
-      $user = $statement->fetch(PDO::FETCH_ASSOC);
+      // kick 'em out!
+      header('Location: ./logout.php');
+      die('INVALID SESSION');
    }
-   else
+   
+   // get user info
+   $statement = $db->query("SELECT * FROM user WHERE username = '".$_SESSION['user']."'");
+   $user = $statement->fetch(PDO::FETCH_ASSOC);
+ 
+   $errorMessage = ""; 
+   if($_SERVER["REQUEST_METHOD"] == "POST")
    {
-      logout();
+      $goodEntry = "Good Entry";
+      //error check
+      $evaluation = errorCheck($_POST['phone_name'], 'phone_name', $goodEntry);
+      if ($evaluation === $goodEntry)
+      {
+         $statement = $db->query("SELECT account_id, id FROM user WHERE username = '".$_POST['user']."'");
+         $phoneUser = $statement->fetch(PDO::FETCH_ASSOC);
+         // submit to db
+         $phoneData = array(
+            'name'   => $_POST['phone_name'],
+            'account_id'   => $phoneUser['account_id'],
+            'user_id' => $phoneUser['id']
+         );
+         createPhone($db, $phoneData);
+         header('Location: ./accountSummary.php');
+         die('PHONE CREATED SUCCESSFUL');
+      }
+      else
+      {
+         $errorMessage = $evaluation;
+      }
    }
-}
-catch (PDOException $e)
-{
-  echo "DATABASE ERROR: ".$e->getMessage();
-  die();
-}
-
-$phone_name = "";
-$phone_name_error = "";
-$goodEntry = "<span style='color:green;' class='glyphicon glyphicon-ok'></span>";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-  if (empty($_POST['phone_name']))
-  {
-	 $phone_name_error = "Phone name is required";
-  }
-  else
-  {
-	 $phone_name = $_POST['phone_name'];
-	 if (!preg_match("/^[a-zA-Z0-9 ]*$/", $phone_name))
-	 {
-		$phone_name_error = "Can only contain letters and numbers.";
-	 }
-	 else
-	 {
-		$phone_name_error = $goodEntry ;
-	 }
-  }
-  if ($phone_name_error === $goodEntry)
-  {
-	 try
-	 {
-		$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		// get account_id
-		foreach($db->query("SELECT account_id FROM user WHERE username = '".$username."'") as $row)
-		{
-		   $account = $row[0];
-		}
-		
-		$query = "INSERT INTO phone(name, dateCreated, connection, account_id) VALUES(:name, :date, :connection, :account_id)";
-		$statement = $db->prepare($query);
-		$connection = 1;
-		$time = date('Y-m-d G:i:s');
-		$statement->bindParam(':name', $phone_name);
-		$statement->bindParam(':date', $time);
-		$statement->bindParam(':connection', $connection);
-		$statement->bindParam(':account_id', $account);
-		$statement->execute();
-		
-		header("Location: ./accountsummary.php");
-		die();
-	 }
-	 catch(Exception $e)
-	 {
-		die("DATABASE ERROR: ".$e);
-	 }
-  }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    <meta name="viewport" content="width=device-width, initial-scale=1">
    
    <!-- Main CSS Style sheet for general styling -->
-   <link rel="stylesheet" href="../css/main.css">
+   <link rel="stylesheet" href="./css/main.css">
    
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -103,42 +68,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 </head>
 <body>
 <div class="container">
-   <div class="row content-container">
-      <div class="row">
-         <div class="col-sm-12">
-         <br/>
-            <a class="btn btn-info btn-md" href="./accountsummary.php"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
-            <a class="btn btn-info btn-md" href="./logout.php">Log Out <span class="glyphicon glyphicon-log-out"></span></a>
-         </div>
+<div class="row">
+   <div class='btn-group btn-group-justified' role='group'>
+      <div class='btn-group' role='group'>
+         <a href='./accountSummary.php' type='button' class='btn btn-primary'><span class='glyphicon glyphicon-arrow-left'></span> Back to Account</a>
       </div>
-      <div class="col-sm-12">
-         <h1 style="text-align:center;">New Phone</h1>
-      </div>
+      <?php 
+      if($user['master_user'] == 1)
+      {
+         echo "<div class='btn-group' role='group'>
+                  <a href='./accountSettings.php' type='button' class='btn btn-primary'><span class='glyphicon glyphicon-cog'></span> Account Settings</a>
+               </div>";
+      }
+      ?>
    </div>
-   <div class="row">
-      <div class="col-sm-12 content-container">
-         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" id="create_phone">
-            <div class="row">
-               <br/>
-               <div class="col-sm-2">
-                  <label><h4>Phone Name</h4></label>
-               </div>
-               <div class="col-sm-6">
-                  <input type="text" class="form-control input-lg" name="phone_name" maxlength="50" placeholder="Phone Name" value="<?php echo $phone_name;?>"/>
-               </div>
-               <div class="col-sm-4">
-                  <span id="phone_name_error" style="color:red;"><?php echo $phone_name_error; ?></span>
-               </div>
-            </div>
-            <br/>
-            <div class="row" style="text-align:center;">
-               <input type="submit" class="btn btn-primary btn-lg"/>
-            </div>
-            <br/>
-         </form>
-      </div>
-   </div> 
-     
+   <div class="col-sm-12 content-container">
+      <h1 style='text-align:center;'>Add Phone to Account</h1>
+   </div>
 </div>
+<div class='row'>
+<div class='col-sm-3'>
+</div>
+<div class='col-sm-6 content-container'>
+   <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' method='POST' role='form'>
+      <div class='input-group input-group-lg'>
+         <label>Phone Name</label>
+         <input type='text' class='form-control' name='phone_name' placeholder='Phone Name'/>
+         <?php echo "<h4 style='color:red'>$errorMessage</h4>";?>
+      </div>
+      <div class='input-group input-group-lg'>
+         <label>This phone's user is:</label>
+         <select name='user' class='form-control'>
+         <?php
+         foreach($db->query("SELECT * FROM user WHERE account_id = ".$user['account_id']) as $accountUser)
+         {
+            echo "<option value='".$accountUser['username']."'>".$accountUser['first_name']."</option>";
+         }
+         ?>
+         </select>
+      </div>
+      <hr class='divider'/>
+      <div style='text-align:center;'>
+         <input type='submit' class='btn btn-primary btn-lg' value='Add Phone'/>
+      </div>
+      <br/>
+   </form>
+</div>
+<div class='col-sm-3'>
+</div>
+</div>
+</div>
+
 </body>
 </html>

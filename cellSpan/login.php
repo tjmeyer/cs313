@@ -1,25 +1,25 @@
 <?php 
-require("dbConnector.php");
-require("authenticate.php"); // <- includes dbconnector that way ALL pages must verify if they access the DB.
-
-$forwardTo = "accountSummary.php";
-$message = "<h1 style='text-align:center;'>Welcome Back!</h1>";
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-   $db = loadDatabase();
-   if (authenticate($_POST['username'], $_POST['password'], $db))
-   {
-      // Create user session
-      session_start();
-      $_SESSION['user'] = $_POST['username'];
-      header('Location: ./accountSummary.php');
-   }
-   else
-   {
-      $message = "<h1 style='text-align:center; color:red;'>Invalid Login</h1>";
-   }
-}
+   require("includes/dbConnector.php");
+   require("includes/authenticate.php");
    
+   $db = loadDatabase();
+   
+   $message = "<h1 style='text-align: center;'>Welcome Back!</h1>";
+   
+   if ($_SERVER["REQUEST_METHOD"] == "POST")
+   {
+      if(authenticate($_POST['username'], $_POST['password'], $db))
+      {
+         session_start();
+         $_SESSION['user'] = $_POST['username'];
+         header('Location: ./accountSummary.php');
+         die("AUTHENTICATION SUCCESSFUL");
+      }
+      else
+      {
+         $message = "<h1 style='color:red;text-align:center;'>Invalid Login</h1>";
+      }
+   }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    <meta name="viewport" content="width=device-width, initial-scale=1">
    
    <!-- Main CSS Style sheet for general styling -->
-   <link rel="stylesheet" href="../css/main.css">
+   <link rel="stylesheet" href="./css/main.css">
    
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             <p><input type="text" class="form-control input-lg" name="username" placeholder="username"/></p>
             <p><input type="password" class="form-control input-lg" name="password" placeholder="password"/></p>
             <p><div style="text-align:center;"><input type="submit" value="Login" class="btn btn-primary btn-lg"/> 
-            <a href="./createaccount.php" class="btn btn-default btn-lg">New Account <span class="glyphicon glyphicon-plus"></span></a></div></p>
+            <a href="./newAccount.php" class="btn btn-default btn-lg">New Account <span class="glyphicon glyphicon-plus"></span></a></div></p>
          </form><br/>
       </div>
       <div class="col-sm-4"></div>

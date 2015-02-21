@@ -8,7 +8,7 @@ function loadDatabase()
   $dbUser = "";
   $dbPassword = "";
 
-     $dbName = "phonedb";
+     $dbName = "nex";
 
      $openShiftVar = getenv('OPENSHIFT_MYSQL_DB_HOST');
 
@@ -33,7 +33,6 @@ function loadDatabase()
      $db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
 
      return $db;
-
 }
 
 ?>
