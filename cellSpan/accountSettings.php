@@ -92,7 +92,7 @@
    </div>
    <div class='col-sm-6 content-container'>
    <h2 style='text-align:center;'>User Information</h2>
-      <form action="" method="POST">
+      <form action="./changeName.php" method="POST">
          <label>First Name</label>
          <input type='text' name='first_name' class='form-control input-lg' value='<?php echo $user['first_name'];?>' placeholder='First Name'/>
          <label>Last Name</label>
