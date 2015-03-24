@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
          $statement = $db->query($query);
          $phone = $statement->fetch(PDO::FETCH_ASSOC);
       } catch (Exception $e) {
+         echo "SELECT ERROR: ".$e;
          die("SELECT ERROR: ".$e);
       }
       
@@ -32,10 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
          $statement->bindParam(":phone_id", $phone['id']);
          $statement->bindParam(":time", $date);
          $statement->execute();
-      } catch (Exception $e) {
+      } catch (Exception $e) {         
+         echo "INSERT ERROR: ".$e;
          die("INSERT ERROR: ".$e);
       }
-      
+      echo "Successfully updated location";
    }
 }
 ?>
