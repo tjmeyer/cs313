@@ -6,7 +6,7 @@ function loadDatabase()
    $dbHost = "127.3.95.130";
    $dbPort = "3306";
    $dbUser = "phoneAccess";
-   $dbPassword = "phonepassword";
+   $dbPassword = "arL4WV34b3EbGYZZ";
    $dbName = "java313";
 
    // echo "host:$dbHost:$dbPort dbName:$dbName user:$dbUser password:$dbPassword<br >\n";
