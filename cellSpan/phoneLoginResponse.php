@@ -34,10 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET")
          //insert new phone
          $query = "INSERT INTO phone(mac, name, connection, account_id, user_id) VALUES (:mac, :name, :conn, :account, :user)";
          $phoneName = $user['first_name']."'s Phone";
+         $conn = 1;
          $statement = $db->prepare($query);
          $statement->bindParam(":mac", $uuid);
          $statement->bindParam(":name", $phoneName);
-         $statement->bindParam(":conn", 1);
+         $statement->bindParam(":conn", $conn);
          $statement->bindParam(":account", $user['account_id']);
          $statement->bindParam(":user", $user['id']);
          $statement->execute();
