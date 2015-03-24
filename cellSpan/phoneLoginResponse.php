@@ -1,13 +1,14 @@
 <?php 
-include("phoneDBConnector.php");
+// include("phoneDBConnector.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-   echo "received!<br/>";
+   $message = "received!<br/>";
    foreach ($_POST as $key=>$value)
    {
-      echo "$key=$value<br/>";
+      $message .= "$key=$value<br/>";
    }
+   echo $message;
    // $db = loadDatabase();
    
    // $username = $_POST['username'];
