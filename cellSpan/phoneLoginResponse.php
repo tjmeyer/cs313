@@ -3,16 +3,16 @@ include("phoneDBConnector.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-   $db = loadDatabase();
-   
-   $username = $_POST['username'];
-   $password = $_POST['password'];
-   $uuid     = $_POST['uuid'];
-   
    $valid = "invalid";
    
-   if($username && $password) //both are not null
+   if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['uuid']))
    {
+      $db = loadDatabase();
+   
+      $username = $_POST['username'];
+      $password = $_POST['password'];
+      $uuid     = $_POST['uuid'];
+   
       $id;
       $accountId;
       try {
@@ -23,6 +23,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
          if($password === $user['password'])
          {
             $id = $user['id'];
+            
+            
+            //insert new phone
+            $query = "INSERT INTO phone(mac, name, connection, account_id, user_id) VALUES (:mac, :name, :conn, :account, :user)";
+            $phoneName = $user['first_name']."'s Phone";
+            $conn = 1;
+            $statement = $db->prepare($query);
+            $statement->bindParam(":mac", $uuid);
+            $statement->bindParam(":name", $phoneName);
+            $statement->bindParam(":conn", $conn);
+            $statement->bindParam(":account", $user['account_id']);
+            $statement->bindParam(":user", $user['id']);
+            $statement->execute();
+            
             $valid = "valid";
          }
       } catch (Exception $e) {
@@ -30,23 +44,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
          die("SELECT ERROR: ".$e);
       }
       
-      try {
-         //insert new phone
-         $query = "INSERT INTO phone(mac, name, connection, account_id, user_id) VALUES (:mac, :name, :conn, :account, :user)";
-         $phoneName = $user['first_name']."'s Phone";
-         $conn = 1;
-         $statement = $db->prepare($query);
-         $statement->bindParam(":mac", $uuid);
-         $statement->bindParam(":name", $phoneName);
-         $statement->bindParam(":conn", $conn);
-         $statement->bindParam(":account", $user['account_id']);
-         $statement->bindParam(":user", $user['id']);
-         $statement->execute();
-      } catch (Exception $e) {
-         echo "INSERT ERROR: ".$e;
-         die("INSERT ERROR: ".$e);
-      }
+
    }
    echo $valid;
 }
 ?>
+
+
+
+
+
+
