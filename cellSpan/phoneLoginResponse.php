@@ -8,7 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    {
       $message .= "$key=$value<br/>";
    }
-   echo $message;
    // $db = loadDatabase();
    
    // $username = $_POST['username'];
@@ -53,7 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
       // }
       
       // echo $valid;
-   }
+   // }
    
 }
 ?>
+<!DOCTYPE html>
+<body>
+<h1><?php echo $message; ?></h1>
+</body>
