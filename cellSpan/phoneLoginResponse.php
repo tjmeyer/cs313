@@ -3,7 +3,8 @@ include("phoneDBConnector.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-   echo "received: ".$_POST['username']."!";
+   $invalid = "NULL";
+   echo "received: ".(isset($_POST['username']) ? $_POST['username'] : $invalid).", ".(isset($_POST['password']) ? $_POST['password'] : $invalid).", ".(isset($_POST['uuid']) ? $_POST['uuid'] : $invalid)."!";
    // $db = loadDatabase();
    
    // $username = $_POST['username'];
