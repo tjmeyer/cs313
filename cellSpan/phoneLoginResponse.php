@@ -1,13 +1,13 @@
 <?php 
 include("phoneDBConnector.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "GET")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
    $db = loadDatabase();
    
-   $username = $_GET['username'];
-   $password = $_GET['password'];
-   $uuid     = $_GET['uuid'];
+   $username = $_POST['username'];
+   $password = $_POST['password'];
+   $uuid     = $_POST['uuid'];
    
    $valid = "invalid";
    
@@ -46,9 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET")
          echo "INSERT ERROR: ".$e;
          die("INSERT ERROR: ".$e);
       }
-      
-      echo $valid;
    }
-   
+   echo $valid;
 }
 ?>
