@@ -3,7 +3,11 @@ include("phoneDBConnector.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-   echo "received: ".$_POST['username'].", ".$_POST['password']."!";
+   echo "received!<br/>";
+   foreach ($_POST as $key=>$value)
+   {
+      echo "$key=$value<br/>";
+   }
    // $db = loadDatabase();
    
    // $username = $_POST['username'];
