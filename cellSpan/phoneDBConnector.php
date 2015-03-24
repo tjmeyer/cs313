@@ -18,13 +18,13 @@ function loadDatabase()
      }
      else 
      { 
-         $dbHost = "127.3.95.130";
+         $dbHost = "ex-std-node518.prod.rhcloud.com";
          $dbPort = "3306";
          $dbUser = "phoneAccess";
-         $dbPassword = "arL4WV34b3EbGYZZ";
+         $dbPassword = "rH6Gmm94uwAaNEqd";
          $dbName = "java313";
      }
-   // echo "host:$dbHost:$dbPort dbName:$dbName user:$dbUser password:$dbPassword<br >\n";
+   echo "host:$dbHost:$dbPort dbName:$dbName user:$dbUser password:$dbPassword<br >\n";
    $db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
 
    return $db;
